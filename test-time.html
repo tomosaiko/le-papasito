@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Calcul Heure</title>
+</head>
+<body>
+    <h1>Test du calcul d'heure</h1>
+    <div id="result"></div>
+
+    <script>
+        function getNextAvailableTimeSlot() {
+            const now = new Date();
+            
+            // Add 1 hour minimum for preparation time
+            now.setHours(now.getHours() + 1);
+            
+            let hour = now.getHours();
+            let minute = now.getMinutes();
+            
+            console.log(`Time + 1h: ${hour}:${minute}`);
+            
+            // Round up to next 30-minute interval
+            if (minute === 0) {
+                // Exactly on the hour, keep it
+                minute = 0;
+            } else if (minute <= 30) {
+                // Between :01 and :30, round to :30
+                minute = 30;
+            } else {
+                // After :30, round to next hour
+                hour += 1;
+                minute = 0;
+            }
+            
+            // If it's past midnight, start from tomorrow
+            if (hour >= 24) {
+                hour = 0;
+            }
+            
+            const formattedHour = hour.toString().padStart(2, "0");
+            const formattedMinute = minute.toString().padStart(2, "0");
+            return `${formattedHour}:${formattedMinute}`;
+        }
+
+        const now = new Date();
+        const currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, "0")}`;
+        const nextSlot = getNextAvailableTimeSlot();
+        
+        document.getElementById('result').innerHTML = `
+            <p><strong>Il est actuellement:</strong> ${currentTime}</p>
+            <p><strong>Prochain créneau calculé:</strong> ${nextSlot}</p>
+        `;
+    </script>
+</body>
+</html>

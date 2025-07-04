@@ -1,0 +1,441 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 271 80% 53%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 42 80% 52%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 271 80% 53%;
+    --radius: 0.75rem;
+
+    /* Couleurs personnalisées */
+    --gold: 43 74% 49%;
+    --gold-light: 43 74% 65%;
+    --gold-dark: 43 74% 35%;
+    --purple: 271 80% 53%;
+    --purple-light: 271 80% 65%;
+    --purple-dark: 271 80% 35%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 271 80% 53%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 42 80% 52%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 271 80% 53%;
+
+    /* Couleurs personnalisées en mode sombre */
+    --gold: 43 74% 49%;
+    --gold-light: 43 74% 65%;
+    --gold-dark: 43 74% 35%;
+    --purple: 271 80% 60%;
+    --purple-light: 271 80% 75%;
+    --purple-dark: 271 80% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1 {
+    @apply text-3xl font-bold md:text-4xl;
+  }
+  h2 {
+    @apply text-2xl font-semibold md:text-3xl;
+  }
+  h3 {
+    @apply text-xl font-semibold md:text-2xl;
+  }
+  h4 {
+    @apply text-lg font-medium md:text-xl;
+  }
+
+  /* Amélioration de la lisibilité en mode sombre */
+  .dark img {
+    @apply brightness-90;
+  }
+
+  /* Transition douce entre les modes */
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    @apply transition-colors duration-300;
+  }
+}
+
+@layer components {
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
+  }
+
+  .badge-premium {
+    @apply bg-purple-500 text-white hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700;
+  }
+
+  .badge-gold {
+    @apply bg-yellow-500 text-black hover:bg-yellow-600 dark:text-white dark:bg-yellow-600 dark:hover:bg-yellow-700;
+  }
+
+  .badge-verified {
+    @apply bg-green-500 text-white hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700;
+  }
+
+  .badge-safesex {
+    @apply bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700;
+  }
+
+  /* Conteneurs adaptés au mode sombre */
+  .card-container {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/30 transition-colors duration-300;
+  }
+
+  /* Boutons adaptés au mode sombre */
+  .btn-primary {
+    @apply bg-purple-500 hover:bg-purple-600 text-white dark:bg-purple-600 dark:hover:bg-purple-700 transition-colors duration-300;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white transition-colors duration-300;
+  }
+
+  /* Inputs adaptés au mode sombre */
+  .input-field {
+    @apply bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 transition-colors duration-300;
+  }
+
+  /* Optimisations pour les cartes sur mobile */
+  .card-mobile {
+    @apply border border-gray-200 dark:border-gray-800;
+  }
+
+  .card-mobile .badge {
+    @apply text-[10px] px-1.5 py-0;
+  }
+
+  .card-mobile .image-container {
+    @apply aspect-[2/3];
+  }
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--gold-light)) 50%, hsl(var(--gold)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.purple-gradient {
+  background: linear-gradient(135deg, hsl(var(--purple)) 0%, hsl(var(--purple-light)) 50%, hsl(var(--purple)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(138, 43, 226, 0.3);
+}
+
+/* Micro-interactions */
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hover-glow {
+  transition: box-shadow 0.2s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Ajoutons une animation pulse subtile pour le bouton de réservation */
+@keyframes pulse-subtle {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+/* Ensure signup button is always visible */
+.signup-button {
+  background-color: hsl(var(--purple)) !important;
+  color: white !important;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Override any hover effects that might change visibility */
+.signup-button:hover {
+  background-color: hsl(var(--purple-dark)) !important;
+  transform: translateY(-2px);
+}
+
+/* Ajustements pour la barre de navigation */
+header {
+  height: 60px;
+}
+
+header .container {
+  height: 100%;
+}
+
+header .flex {
+  height: 100%;
+}
+
+header button {
+  height: 100%;
+  border-radius: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header button:hover {
+  background-color: rgba(138, 43, 226, 0.1);
+}
+
+/* Ajoutons des styles spécifiques pour les boutons circulaires */
+.bg-zinc-800 {
+  background-color: #27272a;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.bg-zinc-800:hover {
+  background-color: hsl(var(--purple));
+  transform: scale(1.1);
+}
+
+/* Ajustements pour le drapeau belge */
+.flag-be {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.flag-be div {
+  flex: 1;
+}
+
+.flag-be div:first-child {
+  background-color: #000;
+}
+
+.flag-be div:nth-child(2) {
+  background-color: #ffd90c;
+}
+
+.flag-be div:last-child {
+  background-color: #f31830;
+}
+
+/* Styles pour le carrousel premium */
+.premium-carousel {
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.premium-carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Animation pour les cartes premium */
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(138, 43, 226, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(138, 43, 226, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(138, 43, 226, 0);
+  }
+}
+
+.premium-card {
+  animation: pulse-border 2s infinite;
+}
+
+/* Ajoutez ces animations à votre fichier globals.css existant */
+@keyframes slide-right-1 {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-right-2 {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-slide-right-1 {
+  animation: slide-right-1 15s linear infinite;
+}
+
+.animate-slide-right-2 {
+  animation: slide-right-2 18s linear infinite;
+}
+
+/* Styles pour les avantages membres */
+.member-benefits-icon {
+  color: hsl(var(--purple));
+  transition: transform 0.3s ease;
+}
+
+.member-benefits-item:hover .member-benefits-icon {
+  transform: scale(1.1);
+}
+
+/* Styles pour les filtres rapides */
+.quick-filter-button {
+  transition: all 0.3s ease;
+}
+
+.quick-filter-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(138, 43, 226, 0.2);
+}
+
+.quick-filter-button:active {
+  transform: translateY(0);
+}
+
+/* Optimisations pour le mode sombre */
+.dark .card {
+  @apply border-gray-800;
+}
+
+.dark .shadow-md {
+  @apply shadow-gray-900/30;
+}
+
+/* Optimisations pour l'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimisations pour le chargement */
+.image-skeleton {
+  @apply bg-gray-200 dark:bg-gray-700 animate-pulse;
+}
+
+.text-skeleton {
+  @apply h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse;
+}
+
+/* Utilitaire pour les très petits écrans */
+@media (min-width: 400px) {
+  .xs\:inline {
+    display: inline;
+  }
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
