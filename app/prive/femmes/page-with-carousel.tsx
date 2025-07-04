@@ -133,7 +133,7 @@ export default function PriveFemmesWithCarousel() {
             </div>
 
             {/* Utilisation du nouveau composant PremiumCarousel */}
-            <PremiumCarousel itemsPerPage={4} autoPlayInterval={6000}>
+            <PremiumCarousel autoPlayInterval={6000}>
               {premiumListings.map((listing) => (
                 <Link href={`/prive/femmes/${listing.id}`} key={listing.id}>
                   <Card className="overflow-hidden bg-white hover:shadow-xl transition-shadow h-full border-2 border-purple-200">

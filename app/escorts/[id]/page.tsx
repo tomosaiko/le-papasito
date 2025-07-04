@@ -8,13 +8,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import { Star, MapPin, Phone, Calendar, Clock, Heart } from "lucide-react"
 
-export default function EscortDetail({ params }: { params: { id: string } }) {
+export default async function EscortDetail({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const { dictionary } = useLanguage();
   const [activeTab, setActiveTab] = useState("photos");
   
   // Sample data for escort
   const escort = {
-    id: Number.parseInt(params.id),
+    id: Number.parseInt(id),
     name: "Sophia",
     age: 25,
     city: "Paris",

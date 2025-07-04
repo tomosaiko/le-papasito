@@ -116,7 +116,7 @@ const hostesses = [
   }
 ]
 
-export function QuickFilterSearch() {
+function QuickFilterSearch() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
 

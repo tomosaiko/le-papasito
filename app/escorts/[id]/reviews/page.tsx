@@ -52,7 +52,8 @@ const generateMockReviews = () => {
   return reviews
 }
 
-export default function ReviewsPage({ params }: { params: { id: string } }) {
+export default async function ReviewsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const [reviews, setReviews] = useState(generateMockReviews())
   const [filters, setFilters] = useState({
     sortBy: "recent",
@@ -62,7 +63,7 @@ export default function ReviewsPage({ params }: { params: { id: string } }) {
 
   // Données de test pour l'escorte
   const escort = {
-    id: params.id,
+    id: id,
     name: "Sophia",
     age: 25,
     location: "Paris, France",

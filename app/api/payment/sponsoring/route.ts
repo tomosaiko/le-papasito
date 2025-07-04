@@ -7,9 +7,7 @@ if (!stripeSecretKey) {
   console.error("STRIPE_SECRET_KEY is not defined")
 }
 
-const stripe = new Stripe(stripeSecretKey || "", {
-  apiVersion: "2023-10-16",
-})
+const stripe = new Stripe(stripeSecretKey || "")
 
 export async function POST(request: NextRequest) {
   try {

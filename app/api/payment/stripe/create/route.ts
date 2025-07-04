@@ -3,9 +3,7 @@ import Stripe from "stripe"
 import { calculateCommission } from "@/lib/payment/commission"
 
 // Initialiser Stripe avec la clé secrète
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2023-10-16",
-})
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "")
 
 export async function POST(request: Request) {
   try {

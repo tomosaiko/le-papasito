@@ -1,18 +1,17 @@
 import { NextResponse } from "next/server"
 import Stripe from "stripe"
-import crypto from "crypto"
+import { createHmac } from "crypto"
 import { headers } from "next/headers"
 import { sendBookingNotification } from "@/lib/notifications/brevo-client"
 
 // Initialiser Stripe avec la clé secrète
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2023-10-16",
-})
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "")
 
 // Webhook pour Stripe
 export async function POST(request: Request) {
   const body = await request.text()
-  const signature = headers().get("stripe-signature") || ""
+  const headersList = await headers()
+  const signature = headersList.get("stripe-signature") || ""
 
   let event
 
@@ -57,10 +56,11 @@ export async function POST(request: Request) {
 // Webhook pour Coinbase Commerce
 export async function PUT(request: Request) {
   const body = await request.text()
-  const signature = headers().get("x-cc-webhook-signature") || ""
+  const headersList = await headers()
+  const signature = headersList.get("x-cc-webhook-signature") || ""
 
   // Vérifier la signature
-  const hmac = crypto.createHmac("sha256", process.env.COINBASE_COMMERCE_WEBHOOK_SECRET || "")
+  const hmac = createHmac("sha256", process.env.COINBASE_COMMERCE_WEBHOOK_SECRET || "")
   const expectedSignature = hmac.update(body).digest("hex")
 
   if (signature !== expectedSignature) {

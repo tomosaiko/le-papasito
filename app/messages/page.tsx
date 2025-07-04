@@ -167,7 +167,7 @@ export default function MessagesPage() {
   }
 
   const activeConversation = mockConversations.find((conv) => conv.id === activeConversationId)
-  const activeMessages = activeConversationId ? mockMessages[activeConversationId] || [] : []
+  const activeMessages = activeConversationId ? (mockMessages as any)[activeConversationId] || [] : []
 
   return (
     <div className="container mx-auto px-4 py-8">

@@ -24,6 +24,7 @@ const generateTestMessages = () => {
       text: "Bonjour ! Comment puis-je vous aider aujourd'hui ?",
       timestamp: new Date(Date.now() - 3600000 * 2),
       isRead: true,
+      reactions: [] as any[],
     },
     {
       id: "msg2",
@@ -31,6 +32,7 @@ const generateTestMessages = () => {
       text: "Bonjour ! Je suis intéressé par vos services. Êtes-vous disponible ce week-end ?",
       timestamp: new Date(Date.now() - 3600000 * 1.5),
       isRead: true,
+      reactions: [] as any[],
     },
     {
       id: "msg3",
@@ -38,10 +40,11 @@ const generateTestMessages = () => {
       text: "Oui, je suis disponible samedi après-midi et dimanche toute la journée. Quel moment vous conviendrait le mieux ?",
       timestamp: new Date(Date.now() - 3600000),
       isRead: true,
+      reactions: [] as any[],
       attachments: [
         {
           id: "att1",
-          type: "image",
+          type: "image" as const,
           url: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/amber-taiwanese-escort-in-osaka-11153696_original.jpg-yvmHBbYNTvuWGXdcpYJN2RKpgECY4X.jpeg",
           name: "photo.jpg",
         },
@@ -53,6 +56,7 @@ const generateTestMessages = () => {
       text: "Dimanche après-midi serait parfait pour moi. Vers 15h ?",
       timestamp: new Date(Date.now() - 1800000),
       isRead: true,
+      reactions: [] as any[],
     },
     {
       id: "msg5",
@@ -60,6 +64,7 @@ const generateTestMessages = () => {
       text: "C'est noté pour dimanche à 15h ! Avez-vous des préférences particulières ou des questions ?",
       timestamp: new Date(Date.now() - 900000),
       isRead: false,
+      reactions: [] as any[],
     },
   ]
 }
@@ -186,7 +191,7 @@ const generateProviders = () => {
       isVerified: Math.random() > 0.3,
       isOnline: Math.random() > 0.5,
       isPremium: Math.random() > 0.8,
-      isGold: !Math.random() > 0.8 && Math.random() > 0.7,
+      isGold: Math.random() > 0.9,
       location: {
         lat: 50.85 + (Math.random() - 0.5) * 0.1,
         lng: 4.35 + (Math.random() - 0.5) * 0.1,
@@ -224,6 +229,7 @@ export default function EnhancedFeaturesDemo() {
       text,
       timestamp: new Date(),
       isRead: false,
+      reactions: [] as any[],
       replyTo: replyToMessageId,
     }
 
@@ -237,6 +243,7 @@ export default function EnhancedFeaturesDemo() {
         text: "Merci pour votre message ! Je vous réponds dès que possible.",
         timestamp: new Date(),
         isRead: false,
+        reactions: [] as any[],
       }
 
       setMessages((prev) => [...prev, responseMessage])

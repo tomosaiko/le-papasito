@@ -133,7 +133,7 @@ const sponsorsData: Record<number, Sponsor> = {
 
 export default function SponsorPage() {
   const params = useParams()
-  const sponsorId = Number(params.id)
+      const sponsorId = Number(params.id)
   const sponsor = sponsorsData[sponsorId]
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0)

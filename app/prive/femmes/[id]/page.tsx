@@ -18,7 +18,8 @@ import {
   Calendar,
 } from "lucide-react"
 
-export default function EscortProfilePage({ params }: { params: { id: string } }) {
+export default async function EscortProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const [activeTab, setActiveTab] = useState<"photos" | "videos">("photos")
   const [favorited, setFavorited] = useState(false)
 
@@ -29,7 +30,7 @@ export default function EscortProfilePage({ params }: { params: { id: string } }
 
   // Sample data for the escort profile
   const profile = {
-    id: params.id,
+    id: id,
     name: "Latina chaude, quelques jours en ville",
     location: "Escort Bruxelles",
     phone: "+351 920 111 381",
@@ -168,7 +169,7 @@ export default function EscortProfilePage({ params }: { params: { id: string } }
                       Les réservations se font uniquement via le chat interne ou la réservation en ligne
                     </p>
                     <div className="flex gap-3 justify-center">
-                      <Link href={`/booking/${params.id}`} passHref>
+                      <Link href={`/booking/${id}`} passHref>
                         <AnimatedButton variant="purple" className="text-sm py-1.5">
                           <Calendar className="h-4 w-4 mr-1" />
                           Réservation
@@ -207,7 +208,7 @@ export default function EscortProfilePage({ params }: { params: { id: string } }
                 <p className="text-black">{profile.description.en}</p>
               </div>
               <div className="px-4 pb-4 flex justify-center">
-                <Link href={`/booking/${params.id}`} passHref>
+                <Link href={`/booking/${id}`} passHref>
                   <AnimatedButton variant="reservation" className="shadow-xl">
                     <Calendar className="h-6 w-6 mr-2" />
                     Réserver maintenant
@@ -294,7 +295,7 @@ export default function EscortProfilePage({ params }: { params: { id: string } }
                 </div>
                 <div className="mb-4">
                   <div className="text-sm mb-2 text-black text-center">Réserver un rendez-vous</div>
-                  <Link href={`/booking/${params.id}`} passHref>
+                  <Link href={`/booking/${id}`} passHref>
                     <AnimatedButton variant="reservation" className="w-full flex items-center justify-center">
                       RÉSERVATION <Calendar className="ml-2 h-5 w-5" />
                     </AnimatedButton>
@@ -874,7 +875,7 @@ export default function EscortProfilePage({ params }: { params: { id: string } }
 
       {/* Bouton flottant pour tous les appareils */}
       <div className="fixed bottom-4 right-4 z-50">
-        <Link href={`/booking/${params.id}`} passHref>
+        <Link href={`/booking/${id}`} passHref>
           <AnimatedButton variant="reservation" className="rounded-full p-5 shadow-xl">
             <Calendar className="h-7 w-7" />
           </AnimatedButton>
