@@ -28,6 +28,7 @@ export default auth((req) => {
     '/verification',
     '/ui-showcase',
     '/demo',
+    '/demo-upload',
   ]
 
   // Routes protégées nécessitant une authentification
@@ -161,6 +162,11 @@ export default auth((req) => {
   if (nextUrl.pathname.startsWith('/api/')) {
     // Les API routes d'authentification sont ouvertes
     if (nextUrl.pathname.startsWith('/api/auth/')) {
+      return NextResponse.next()
+    }
+
+    // API de demo publique pour les tests
+    if (nextUrl.pathname.startsWith('/api/upload/demo')) {
       return NextResponse.next()
     }
 

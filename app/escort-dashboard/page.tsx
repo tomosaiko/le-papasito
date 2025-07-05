@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { User, ImageIcon, CreditCard, Users, Eye, Heart, Copy, Check, Upload, Trash2 } from "lucide-react"
+import AvatarUpload from "@/components/upload/avatar-upload"
+import GalleryUpload from "@/components/upload/gallery-upload"
 
 export default function EscortDashboard() {
   const { dictionary } = useLanguage()
@@ -149,6 +151,20 @@ export default function EscortDashboard() {
           <TabsContent value="profile" className="p-6">
             <h2 className="text-2xl font-semibold mb-6">{dictionary.escort.dashboard.profile}</h2>
 
+            {/* Avatar Section */}
+            <div className="mb-8">
+              <h3 className="text-lg font-medium mb-4">Photo de profil</h3>
+              <AvatarUpload
+                currentAvatar={escortData.photos[0]}
+                userName={escortData.name}
+                onUpload={(imageUrl) => {
+                  console.log('Avatar mis à jour:', imageUrl)
+                  // TODO: Mettre à jour le state/API
+                }}
+                className="max-w-md"
+              />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="name">Name</Label>
@@ -196,40 +212,15 @@ export default function EscortDashboard() {
             <h2 className="text-2xl font-semibold mb-6">{dictionary.escort.dashboard.gallery}</h2>
 
             <div className="space-y-8">
-              {/* Photos */}
-              <div>
-                <h3 className="text-xl mb-4">Photos</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                  {escortData.photos.map((photo, index) => (
-                    <div key={index} className="relative group">
-                      <img
-                        src={photo || "/placeholder.svg"}
-                        alt={`Photo ${index + 1}`}
-                        className="w-full aspect-[3/4] object-cover rounded-lg"
-                      />
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
-                        <Button variant="ghost" size="icon" className="text-white hover:text-red-500">
-                          <Trash2 className="h-5 w-5" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+              {/* Photos - Système d'upload avancé */}
+              <GalleryUpload
+                onImageChange={(images) => {
+                  console.log('Galerie mise à jour:', images)
+                  // TODO: Mettre à jour le state/API
+                }}
+              />
 
-                  <div className="border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center p-4 aspect-[3/4]">
-                    <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                    <p className="text-sm text-muted-foreground text-center">Upload Photo</p>
-                    <Input id="upload-photo" type="file" accept="image/jpeg,image/png" className="hidden" />
-                    <Label
-                      htmlFor="upload-photo"
-                      className="mt-2 inline-flex items-center px-3 py-1 bg-gold-DEFAULT hover:bg-gold-dark text-black rounded-md cursor-pointer text-sm"
-                    >
-                      Browse
-                    </Label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Videos */}
+              {/* Videos - À implémenter plus tard */}
               <div>
                 <h3 className="text-xl mb-4">Videos</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -248,14 +239,13 @@ export default function EscortDashboard() {
 
                   <div className="border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center p-4 aspect-video">
                     <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                    <p className="text-sm text-muted-foreground text-center">Upload Video</p>
-                    <Input id="upload-video" type="file" accept="video/mp4" className="hidden" />
-                    <Label
-                      htmlFor="upload-video"
-                      className="mt-2 inline-flex items-center px-3 py-1 bg-gold-DEFAULT hover:bg-gold-dark text-black rounded-md cursor-pointer text-sm"
+                    <p className="text-sm text-muted-foreground text-center">Upload Video (Bientôt disponible)</p>
+                    <Button
+                      disabled
+                      className="mt-2 bg-gold-DEFAULT/50 text-black/50 cursor-not-allowed text-sm"
                     >
-                      Browse
-                    </Label>
+                      Bientôt disponible
+                    </Button>
                   </div>
                 </div>
               </div>

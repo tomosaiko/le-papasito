@@ -75,8 +75,36 @@ model User {
   savedSearches     SavedSearch[]
   accounts          Account[]
   sessions          Session[]
+  images            Image[]
   
   @@map("users")
+}
+
+// Image model for all types (avatars, galleries, verification docs)
+model Image {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Image details
+  type      String    // 'avatar', 'gallery', 'verification'
+  url       String
+  publicId  String    @unique // Cloudinary public ID
+  
+  // Metadata
+  width     Int
+  height    Int
+  format    String
+  bytes     Int
+  
+  // Organization
+  position  Int       @default(0)
+  isMain    Boolean   @default(false)
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  @@map("images")
 }
 
 // Escort Profile
