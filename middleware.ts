@@ -29,6 +29,7 @@ export default auth((req) => {
     '/ui-showcase',
     '/demo',
     '/demo-upload',
+    '/demo-advanced-upload',
   ]
 
   // Routes protégées nécessitant une authentification
