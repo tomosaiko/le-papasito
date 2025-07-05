@@ -61,7 +61,8 @@ export class VerificationService {
    */
   static async verifyEmailToken(token: string): Promise<VerificationResult> {
     try {
-      const verification = await prisma.verification.findFirst({
+      // Rechercher toutes les vérifications pending pour trouver le bon token
+      const verifications = await prisma.verification.findMany({
         where: {
           type: 'EMAIL_VERIFICATION',
           status: 'PENDING',
@@ -71,6 +72,12 @@ export class VerificationService {
         }
       })
 
+      // Trouver la vérification avec le bon token
+      const verification = verifications.find(v => {
+        const verificationData = v.data as any
+        return verificationData.token === token
+      })
+
       if (!verification) {
         return {
           success: false,
@@ -78,15 +85,8 @@ export class VerificationService {
         }
       }
 
-      // Vérifier le token et l'expiration
+      // Vérifier l'expiration
       const verificationData = verification.data as any
-      if (verificationData.token !== token) {
-        return {
-          success: false,
-          message: 'Token de vérification invalide'
-        }
-      }
-
       if (new Date() > new Date(verificationData.expiresAt)) {
         return {
           success: false,
@@ -106,13 +106,13 @@ export class VerificationService {
         }
       })
 
-      // Marquer la vérification comme approuvée
+      // Marquer la vérification comme vérifiée
       await prisma.verification.update({
         where: {
           id: verification.id
         },
         data: {
-          status: 'APPROVED',
+          status: 'VERIFIED',
           reviewedAt: new Date()
         }
       })
