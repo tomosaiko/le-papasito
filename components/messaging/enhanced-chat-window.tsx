@@ -117,7 +117,7 @@ export function EnhancedChatWindow({
   const [editingMessage, setEditingMessage] = useState<Message | null>(null)
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
-  const [typingTimeout, setTypingTimeout] = useState<number | null>(null)
+  const [typingTimeout, setTypingTimeout] = useState<ReturnType<typeof setTimeout> | null>(null)
   const [audioPlayer, setAudioPlayer] = useState<{
     messageId: string
     isPlaying: boolean
