@@ -21,7 +21,6 @@ export const metadata: Metadata = {
   title: "Le Papasito - Premium Escort Platform",
   description: "Plateforme premium d'escort avec interface mobile optimisée",
   manifest: "/manifest.json",
-  themeColor: "#D4AF37",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -47,16 +46,13 @@ export const metadata: Metadata = {
   generator: 'v0.dev'
 }
 
-// Ajout de configuration viewport pour une meilleure expérience mobile
+// Configuration viewport pour une meilleure expérience mobile et PWA
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#121212" },
-  ],
+  themeColor: "#D4AF37",
 }
 
 export default function RootLayout({

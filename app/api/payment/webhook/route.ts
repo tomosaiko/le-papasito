@@ -1,56 +1,53 @@
-import { NextResponse } from "next/server"
-import Stripe from "stripe"
-import { createHmac } from "crypto"
-import { headers } from "next/headers"
-import { sendBookingNotification } from "@/lib/notifications/brevo-client"
+import { NextRequest, NextResponse } from 'next/server';
+import { headers } from 'next/headers';
+import StripeService from '@/lib/services/stripe.service';
+import Stripe from 'stripe';
 
-// Initialiser Stripe avec la clé secrète
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_dummy_key")
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-12-18.acacia',
+});
 
-// Webhook pour Stripe
-export async function POST(request: Request) {
-  const body = await request.text()
-  const headersList = await headers()
-  const signature = headersList.get("stripe-signature") || ""
-
-  let event
-
+export async function POST(request: NextRequest) {
   try {
-    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET || "")
-  } catch (error: any) {
-    console.error("Webhook signature verification failed:", error.message)
-    return NextResponse.json({ error: error.message }, { status: 400 })
-  }
+    const body = await request.text();
+    const signature = headers().get('stripe-signature');
 
-  // Gérer les événements de paiement
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session
-
-    // Récupérer les métadonnées
-    const metadata = session.metadata || {}
-    const bookingId = metadata.bookingId
-
-    if (bookingId) {
-      // Mettre à jour le statut de la réservation dans la base de données
-      // await updateBookingStatus(bookingId, 'paid');
-
-      // Envoyer une notification de confirmation
-      if (session.customer_details?.email) {
-        await sendBookingNotification(
-          session.customer_details.email,
-          session.customer_details.name || "Client",
-          session.customer_details.phone || "",
-          {
-            date: metadata.bookingDate,
-            timeSlot: { startTime: metadata.startTime },
-            duration: metadata.duration || "1",
-          },
-        )
-      }
+    if (!signature) {
+      return NextResponse.json(
+        { error: 'No signature provided' },
+        { status: 400 }
+      );
     }
-  }
 
-  return NextResponse.json({ received: true })
+    let event: Stripe.Event;
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        body,
+        signature,
+        process.env.STRIPE_WEBHOOK_SECRET!
+      );
+    } catch (err) {
+      console.error('Webhook signature verification failed:', err);
+      return NextResponse.json(
+        { error: 'Invalid signature' },
+        { status: 400 }
+      );
+    }
+
+    console.log('[Stripe Webhook] Event:', event.type);
+
+    // Process the event through StripeService
+    await StripeService.handleWebhook(event);
+
+    return NextResponse.json({ received: true });
+  } catch (error) {
+    console.error('[Stripe Webhook] Error:', error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Webhook processing failed' },
+      { status: 500 }
+    );
+  }
 }
 
 // Webhook pour Coinbase Commerce

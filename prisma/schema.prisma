@@ -36,6 +36,40 @@ enum VerificationStatus {
   REJECTED
 }
 
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum CommissionStatus {
+  PENDING
+  CALCULATED
+  PAID
+  CANCELLED
+}
+
+enum TransactionType {
+  PAYMENT
+  REFUND
+  COMMISSION
+  PAYOUT
+  SUBSCRIPTION
+  BONUS
+  WITHDRAWAL
+}
+
 // User model
 model User {
   id                String    @id @default(cuid())
@@ -76,6 +110,12 @@ model User {
   accounts          Account[]
   sessions          Session[]
   images            Image[]
+  
+  // Financial relations
+  digitalWallet     DigitalWallet?
+  payouts           Payout[]
+  commissionsEarned Commission[] @relation("CommissionRecipient")
+  commissionsOwed   Commission[] @relation("CommissionPayer")
   
   @@map("users")
 }
@@ -181,12 +221,40 @@ model Subscription {
   id            String           @id @default(cuid())
   userId        String           @unique
   user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Subscription details
   type          SubscriptionType @default(BASIC)
   isActive      Boolean          @default(true)
   startDate     DateTime         @default(now())
   endDate       DateTime?
   autoRenew     Boolean          @default(true)
+  
+  // Pricing
+  price         Float            @default(0)
+  currency      String           @default("EUR")
+  billingCycle  String           @default("monthly") // monthly, yearly
+  
+  // Stripe integration
   stripeId      String?          @unique
+  stripeStatus  String?          // active, past_due, canceled, etc.
+  
+  // Features
+  features      Json?            // Subscription features
+  limits        Json?            // Usage limits
+  
+  // Trial
+  trialStart    DateTime?
+  trialEnd      DateTime?
+  
+  // Cancellation
+  cancelAt      DateTime?
+  canceledAt    DateTime?
+  cancelReason  String?
+  
+  // Relations
+  commissions   Commission[]
+  events        SubscriptionEvent[]
+  
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
   
@@ -250,20 +318,28 @@ model Booking {
   date      DateTime
   startTime DateTime
   endTime   DateTime
-  duration  Int           // in hours
+  duration  Int           // in minutes
+  
+  // Pricing
+  hourlyRate Float
   totalAmount Float
-  commission  Float       @default(0)
   
   // Status
   status    BookingStatus @default(PENDING)
+  
+  // Location
+  location  String?
+  address   String?
+  
+  // Notes
   notes     String?
   
-  // Payment
-  paymentId String?      @unique
+  // Relations
   payment   Payment?
+  commissions Commission[]
   
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
   
   @@map("bookings")
 }
@@ -305,18 +381,37 @@ model Review {
 
 // Payment model
 model Payment {
-  id            String      @id @default(cuid())
-  bookingId     String      @unique
-  booking       Booking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  id            String        @id @default(cuid())
+  bookingId     String        @unique
+  booking       Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  // Amount details
   amount        Float
-  currency      String      @default("EUR")
-  status        String      @default("pending")
+  currency      String        @default("EUR")
+  platformFee   Float         @default(0)
+  stripeFee     Float         @default(0)
+  netAmount     Float         // amount - platformFee - stripeFee
+  
+  // Status
+  status        PaymentStatus @default(PENDING)
+  
+  // Payment method
   paymentMethod String
-  stripeId      String?     @unique
-  transactionId String?
+  paymentData   Json?         // Encrypted payment data
+  
+  // Stripe integration
+  stripeId      String?       @unique
+  paymentIntentId String?
+  
+  // Timestamps
   paidAt        DateTime?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  refundedAt    DateTime?
+  
+  // Metadata
+  metadata      Json?
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   
   @@map("payments")
 }
@@ -339,18 +434,47 @@ model PaymentMethod {
 
 // Transaction model
 model Transaction {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type        String   // payment, refund, commission
-  amount      Float
-  currency    String   @default("EUR")
-  status      String   @default("pending")
-  description String?
-  metadata    Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String          @id @default(cuid())
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   
+  // Transaction details
+  type          TransactionType
+  amount        Float
+  currency      String          @default("EUR")
+  status        PaymentStatus   @default(PENDING)
+  
+  // Description
+  description   String?
+  reference     String?         // External reference
+  
+  // Source
+  bookingId     String?
+  subscriptionId String?
+  payoutId      String?
+  
+  // Payment integration
+  stripeId      String?         @unique
+  paymentIntentId String?
+  
+  // Fees
+  platformFee   Float?          @default(0)
+  stripeFee     Float?          @default(0)
+  netAmount     Float?          // amount - fees
+  
+  // Timestamps
+  processedAt   DateTime?
+  completedAt   DateTime?
+  
+  // Metadata
+  metadata      Json?
+  
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  
+  @@index([userId, type])
+  @@index([status])
+  @@index([createdAt])
   @@map("transactions")
 }
 
@@ -471,4 +595,140 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+// Digital Wallet model
+model DigitalWallet {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Balance
+  balance           Float    @default(0)
+  currency          String   @default("EUR")
+  
+  // Earnings
+  totalEarnings     Float    @default(0)
+  availableEarnings Float    @default(0)
+  pendingEarnings   Float    @default(0)
+  
+  // Withdrawals
+  totalWithdrawn    Float    @default(0)
+  minimumWithdrawal Float    @default(50)
+  
+  // Bank details
+  bankAccountName   String?
+  bankAccountNumber String?
+  bankRoutingNumber String?
+  bankSwiftCode     String?
+  
+  // Status
+  isActive          Boolean  @default(true)
+  isVerified        Boolean  @default(false)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("digital_wallets")
+}
+
+// Payout model
+model Payout {
+  id            String       @id @default(cuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Amount
+  amount        Float
+  currency      String       @default("EUR")
+  fee           Float        @default(0)
+  netAmount     Float        // amount - fee
+  
+  // Status
+  status        PayoutStatus @default(PENDING)
+  
+  // Payment details
+  paymentMethod String       // bank_transfer, paypal, etc.
+  paymentData   Json?        // Encrypted payment details
+  
+  // Tracking
+  stripePayoutId String?     @unique
+  transactionId  String?
+  
+  // Timestamps
+  requestedAt   DateTime     @default(now())
+  processedAt   DateTime?
+  completedAt   DateTime?
+  
+  // Metadata
+  notes         String?
+  adminNotes    String?
+  
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  
+  @@map("payouts")
+}
+
+// Commission model
+model Commission {
+  id            String           @id @default(cuid())
+  
+  // Parties involved
+  payerId       String           // User who pays the commission
+  payer         User             @relation("CommissionPayer", fields: [payerId], references: [id], onDelete: Cascade)
+  recipientId   String           // User who receives the commission
+  recipient     User             @relation("CommissionRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  
+  // Source
+  bookingId     String?          // If commission is from booking
+  booking       Booking?         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  subscriptionId String?         // If commission is from subscription
+  subscription  Subscription?    @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  // Amounts
+  baseAmount    Float            // Original transaction amount
+  rate          Float            // Commission rate (percentage)
+  amount        Float            // Commission amount
+  currency      String           @default("EUR")
+  
+  // Status
+  status        CommissionStatus @default(PENDING)
+  
+  // Timestamps
+  calculatedAt  DateTime?
+  paidAt        DateTime?
+  
+  // Metadata
+  type          String           // booking, subscription, referral, etc.
+  description   String?
+  metadata      Json?
+  
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  
+  @@map("commissions")
+}
+
+// Subscription Event model
+model SubscriptionEvent {
+  id             String       @id @default(cuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  // Event details
+  type           String       // created, updated, canceled, payment_failed, etc.
+  status         String?      // Event status
+  
+  // Data
+  previousData   Json?        // Previous state
+  currentData    Json?        // Current state
+  
+  // Metadata
+  stripeEventId  String?      @unique
+  metadata       Json?
+  
+  createdAt      DateTime     @default(now())
+  
+  @@map("subscription_events")
 } 
