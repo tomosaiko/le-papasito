@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { toast } from '@/hooks/use-toast'
-import { Upload, Image as ImageIcon, User, Gallery, CheckCircle, Code, Zap } from 'lucide-react'
+import { Upload, Image as ImageIcon, User, Images, CheckCircle, Code, Zap } from 'lucide-react'
 import ImageUpload from '@/components/upload/image-upload'
 import Image from 'next/image'
 
@@ -211,7 +211,7 @@ export default function DemoUploadPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Gallery className="w-5 h-5 text-purple-500" />
+                <Images className="w-5 h-5 text-purple-500" />
                 <div>
                   <p className="text-sm text-gray-600">Images galerie</p>
                   <p className="text-2xl font-bold">{galleryImages.length}</p>
@@ -302,7 +302,7 @@ export default function DemoUploadPage() {
                     <Card>
                       <CardHeader>
                         <CardTitle className="flex items-center space-x-2">
-                          <Gallery className="w-5 h-5" />
+                          <Images className="w-5 h-5" />
                           <span>Galerie ({galleryImages.length} images)</span>
                         </CardTitle>
                       </CardHeader>
