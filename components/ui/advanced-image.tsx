@@ -105,7 +105,7 @@ export function AdvancedImage({
   // Précharger l'image si nécessaire
   useEffect(() => {
     if (preload && typeof src === "string") {
-      const img = new Image()
+      const img = document.createElement("img")
       img.src = src
       img.onload = () => {
         setImageDimensions({ width: img.width, height: img.height })

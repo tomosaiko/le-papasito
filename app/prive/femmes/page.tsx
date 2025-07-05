@@ -409,7 +409,7 @@ export default function PriveFemmes() {
   // Obtenir les annonces premium actuelles à afficher
 
   // Ajoutez une fonction pour gérer l'application des filtres
-  const handleApplyFilters = (filters) => {
+  const handleApplyFilters = (filters: any) => {
     console.log("Filtres appliqués:", filters)
     // Ici vous pourriez implémenter la logique de filtrage réelle
   }
@@ -626,9 +626,9 @@ export default function PriveFemmes() {
                   location={escort.location}
                   images={escort.images}
                   isGold={escort.isGold}
-                  isPremium={escort.isPremium}
+                  isPremium={(escort as any).isPremium ?? false}
                   isVerified={escort.isVerified}
-                  isSafeSex={escort.isSafeSex}
+                  isSafeSex={(escort as any).isSafeSex ?? false}
                   imageCount={`1/${escort.images.length}`}
                 />
               </Link>

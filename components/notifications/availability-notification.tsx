@@ -52,17 +52,7 @@ export function AvailabilityNotification({
         icon: "/images/logo.png",
         badge: "/images/logo.png",
         tag: `availability-${hostessId}`,
-        requireInteraction: true,
-        actions: [
-          {
-            action: "accept",
-            title: "Réserver"
-          },
-          {
-            action: "decline", 
-            title: "Plus tard"
-          }
-        ]
+        requireInteraction: true
       })
     }
   }

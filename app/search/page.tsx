@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Filter, MapPin, SearchIcon, Star, Shield } from "lucide-react"
+import { CheckCircle, Filter, MapPin, SearchIcon, Star, Shield, X } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -53,6 +53,50 @@ export default function SearchPage() {
   const [searchResults, setSearchResults] = useState(generateSearchResults())
   const [activeTab, setActiveTab] = useState("grid")
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [activeFilters, setActiveFilters] = useState<string[]>([])
+
+  const quickFilters = [
+    { id: "verified", label: "Verified", emoji: "✓" },
+    { id: "new", label: "New", emoji: "🆕" },
+    { id: "popular", label: "Popular", emoji: "🔥" },
+    { id: "safesex", label: "Safe Sex", emoji: "🛡️" },
+  ]
+
+  const handleFilterToggle = (filterId: string) => {
+    setActiveFilters(prev => 
+      prev.includes(filterId) 
+        ? prev.filter(id => id !== filterId)
+        : [...prev, filterId]
+    )
+  }
+
+  const filterTags = activeFilters.map(filterId => {
+    const filter = quickFilters.find(f => f.id === filterId)
+    return filter ? {
+      id: filterId,
+      label: filter.label,
+      value: filterId
+    } : null
+  }).filter(Boolean) as any[]
+
+  const handleRemoveTag = (tagId: string) => {
+    setActiveFilters(prev => prev.filter(id => id !== tagId))
+  }
+
+  const handleClearAll = () => {
+    setActiveFilters([])
+  }
+
+  const handleApplyAdvancedFilters = (filters: any) => {
+    console.log("Advanced filters applied:", filters)
+    // Ici on peut implémenter la logique de filtrage avancée
+    setFiltersOpen(false)
+  }
+
+  const handleResetAdvancedFilters = () => {
+    console.log("Advanced filters reset")
+    // Ici on peut implémenter la logique de réinitialisation
+  }
 
   return (
     <div className="container mx-auto py-10">
@@ -71,13 +115,38 @@ export default function SearchPage() {
       </div>
 
       {/* Quick Filters */}
-      <QuickFilters />
+      <QuickFilters 
+        filters={quickFilters}
+        activeFilters={activeFilters}
+        onFilterToggle={handleFilterToggle}
+      />
 
       {/* Filter Tags */}
-      <FilterTags />
+      <FilterTags 
+        tags={filterTags}
+        onRemoveTag={handleRemoveTag}
+        onClearAll={handleClearAll}
+      />
 
       {/* Advanced Filters (Modal) */}
-      <AdvancedFilters open={filtersOpen} setOpen={setFiltersOpen} />
+      {filtersOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-4">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Filtres avancés</h2>
+                <Button variant="ghost" size="sm" onClick={() => setFiltersOpen(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <AdvancedFilters 
+                onApplyFilters={handleApplyAdvancedFilters}
+                onResetFilters={handleResetAdvancedFilters}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tabs pour l'affichage */}
       <Tabs defaultValue="grid" className="w-full mt-4">

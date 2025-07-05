@@ -217,7 +217,8 @@ export function EnhancedAvailabilityCalendar({
               available: "cursor-pointer",
             }}
             components={{
-              Day: ({ date, ...props }) => {
+              Day: ({ day, ...props }) => {
+                const date = day.date
                 const availability = getAvailabilityLevel(date)
                 const isDisabled = isDateDisabled(date)
                 const isSelected =

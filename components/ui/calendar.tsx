@@ -51,7 +51,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         ...classNames,
       }}
       components={{
-        Dropdown: ({ value, onChange, children, ...props }: DropdownProps) => {
+        Dropdown: ({ value, onChange, children, ...props }: any) => {
           const options = React.Children.toArray(children) as React.ReactElement<React.HTMLProps<HTMLOptionElement>>[]
           const selected = options.find((child) => child.props.value === value)
           const handleChange = (value: string) => {
@@ -72,7 +72,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
               </SelectTrigger>
               <SelectContent position="popper">
                 {options.map((option) => (
-                  <SelectItem key={option.props.value} value={option.props.value?.toString() ?? ""}>
+                  <SelectItem key={Array.isArray(option.props.value) ? option.props.value.join('') : (option.props.value as string | number)} value={option.props.value?.toString() ?? ""}>
                     {option.props.children}
                   </SelectItem>
                 ))}
@@ -80,8 +80,6 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
             </Select>
           )
         },
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-5 w-5" />,
-        IconRight: ({ ...props }) => <ChevronRight className="h-5 w-5" />,
       }}
       {...props}
     />

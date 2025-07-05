@@ -329,7 +329,7 @@ const SponsoringPage = () => {
                   )}
                 </div>
               </div>
-              <Button type="button" onClick={() => document.querySelector('[data-value="contact"]')?.click()}>
+              <Button type="button" onClick={() => (document.querySelector('[data-value="contact"]') as HTMLElement)?.click()}>
                 Continuer
               </Button>
             </TabsContent>
@@ -373,7 +373,7 @@ const SponsoringPage = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => document.querySelector('[data-value="details"]')?.click()}
+                  onClick={() => (document.querySelector('[data-value="details"]') as HTMLElement)?.click()}
                 >
                   Retour
                 </Button>
