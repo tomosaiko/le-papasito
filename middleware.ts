@@ -18,6 +18,7 @@ export default auth((req) => {
     '/login',
     '/signup',
     '/api/auth',
+    '/api/verification',
     '/escorts',
     '/prive',
     '/hotesses',

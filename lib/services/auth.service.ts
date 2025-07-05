@@ -2,6 +2,8 @@ import { prisma } from '@/lib/db'
 import { User, UserRole } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
+import { VerificationService } from './verification.service'
+import { EmailService } from './email.service'
 
 // Types
 interface SignUpData {
@@ -91,6 +93,16 @@ export class AuthService {
 
       // Log de l'inscription
       console.log(`[AuthService] Nouvel utilisateur créé: ${user.email} (${user.role})`)
+
+      // Envoyer l'email de vérification automatiquement
+      try {
+        const verificationToken = await VerificationService.generateEmailVerificationToken(user.id)
+        await EmailService.sendVerificationEmail(user, verificationToken)
+        console.log(`[AuthService] Email de vérification envoyé à ${user.email}`)
+      } catch (emailError) {
+        console.error(`[AuthService] Erreur envoi email de vérification: ${emailError}`)
+        // Ne pas faire échouer l'inscription si l'email échoue
+      }
 
       return user
     } catch (error) {
@@ -192,6 +204,24 @@ export class AuthService {
     } catch (error) {
       console.error('[AuthService] Erreur création utilisateur OAuth:', error)
       throw error
+    }
+  }
+
+  /**
+   * Trouver un utilisateur par email
+   */
+  static async findByEmail(email: string): Promise<User | null> {
+    try {
+      return await prisma.user.findUnique({
+        where: { email },
+        include: {
+          escortProfile: true,
+          subscription: true
+        }
+      })
+    } catch (error) {
+      console.error('[AuthService] Erreur recherche utilisateur:', error)
+      return null
     }
   }
 

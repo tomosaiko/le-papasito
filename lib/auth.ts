@@ -236,7 +236,20 @@ export const authConfig: NextAuthConfig = {
         secure: process.env.NODE_ENV === 'production',
       },
     },
+    csrfToken: {
+      name: 'next-auth.csrf-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
   },
+
+  // Configuration de sécurité additionnelle
+  useSecureCookies: process.env.NODE_ENV === 'production',
+  trustHost: true,
 
   // Configuration de debug (seulement en développement)
   debug: process.env.NODE_ENV === 'development',
