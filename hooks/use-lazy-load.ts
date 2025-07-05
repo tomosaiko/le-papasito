@@ -13,7 +13,7 @@ export function useLazyLoad<T>(
 
   useEffect(() => {
     let isMounted = true
-    let timer: number
+    let timer: ReturnType<typeof setTimeout>
 
     setIsLoading(true)
     setError(null)
