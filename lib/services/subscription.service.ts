@@ -20,7 +20,7 @@ const SUBSCRIPTION_PLANS = {
       analyticsAccess: false,
       customBranding: false,
       apiAccess: false,
-      commissionRate: 0.15, // 15% commission
+      commissionRate: 0.30, // 30% commission
     },
     limits: {
       dailyMessages: 10,
@@ -41,7 +41,7 @@ const SUBSCRIPTION_PLANS = {
       analyticsAccess: true,
       customBranding: false,
       apiAccess: false,
-      commissionRate: 0.12, // 12% commission
+      commissionRate: 0.25, // 25% commission
     },
     limits: {
       dailyMessages: 50,
@@ -62,7 +62,7 @@ const SUBSCRIPTION_PLANS = {
       analyticsAccess: true,
       customBranding: true,
       apiAccess: true,
-      commissionRate: 0.10, // 10% commission
+      commissionRate: 0.20, // 20% commission
     },
     limits: {
       dailyMessages: -1, // Unlimited

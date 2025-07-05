@@ -9,7 +9,7 @@
 #### Objectifs Atteints ✅
 - [x] **Stripe Integration** : Service complet avec paiements, abonnements et webhooks
 - [x] **Multi-tier Subscriptions** : BASIC (gratuit), PREMIUM (€29.99/mois), VIP (€99.99/mois)
-- [x] **Commission System** : Calcul automatique (15%/12%/10% selon abonnement)
+- [x] **Commission System** : Calcul automatique (30%/25%/20% selon abonnement)
 - [x] **Digital Wallet** : Portefeuille numérique avec retraits (minimum €50)
 - [x] **Financial Dashboard** : Vue d'ensemble financière complète
 - [x] **Recurring Billing** : Facturation automatique avec gestion des échecs
@@ -29,7 +29,7 @@
 - Plateforme : 15% sur toutes les transactions
 - Stripe : 2.9% + €0.30 par transaction
 - Retrait : 2% + €0.25 (minimum €50)
-- Commissions : 15% (BASIC), 12% (PREMIUM), 10% (VIP)
+- Commissions : 30% (BASIC), 25% (PREMIUM), 20% (VIP)
 
 ## 🎯 VISION GÉNÉRALE
 
@@ -283,6 +283,12 @@ Les étapes précédentes ont établi une base solide :
 - Documentation technique complète
 - Tests unitaires préparés
 
+### Évolutions Récentes
+- **Taux de Commission Ajustés** : 30% (BASIC), 25% (PREMIUM), 20% (VIP)
+- **Système de Paiement** : Intégration Stripe complète
+- **Portefeuille Digital** : Gestion des retraits automatisée
+- **Performance** : Optimisations des requêtes
+
 ---
 
-**Dernière mise à jour** : 2025-01-18 - ÉTAPE 5 TERMINÉE ✅ 
+**Dernière mise à jour** : 2025-01-18 - TAUX DE COMMISSION AJUSTÉS ✅ 

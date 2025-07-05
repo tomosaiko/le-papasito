@@ -10,9 +10,9 @@
 
 ### 2. Système d'Abonnements
 - ✅ **Trois Niveaux** :
-  - **BASIC** : Gratuit, 15% commission, fonctionnalités limitées
-  - **PREMIUM** : €29.99/mois, 12% commission, fonctionnalités étendues
-  - **VIP** : €99.99/mois, 10% commission, fonctionnalités illimitées
+  - **BASIC** : Gratuit, 30% commission, fonctionnalités limitées
+  - **PREMIUM** : €29.99/mois, 25% commission, fonctionnalités étendues
+  - **VIP** : €99.99/mois, 20% commission, fonctionnalités illimitées
 - ✅ **Billing Cycles** : Facturation mensuelle/annuelle avec 20% de réduction
 - ✅ **Feature Access Control** : Contrôle d'accès basé sur l'abonnement
 - ✅ **Subscription Analytics** : Statistiques d'utilisation et revenus
@@ -46,9 +46,9 @@
 - **Retrait** : 2% + €0.25 (minimum €50)
 
 ### Taux de Commission par Abonnement
-- **BASIC** : 15% de commission
-- **PREMIUM** : 12% de commission
-- **VIP** : 10% de commission
+- **BASIC** : 30% de commission
+- **PREMIUM** : 25% de commission
+- **VIP** : 20% de commission
 
 ## 🔧 Services Implémentés
 

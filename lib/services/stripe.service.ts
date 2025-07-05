@@ -285,7 +285,7 @@ export class StripeService {
   /**
    * Calculate and create commission
    */
-  async calculateCommission(bookingId: string, amount: number, commissionRate: number = 0.10) {
+  async calculateCommission(bookingId: string, amount: number, commissionRate: number = 0.30) {
     try {
       const booking = await prisma.booking.findUnique({
         where: { id: bookingId },
